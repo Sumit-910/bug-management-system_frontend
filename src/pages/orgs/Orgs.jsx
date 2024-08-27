@@ -1,3 +1,4 @@
+import './orgs.css';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import Modal from '../../components/modal/Modal';
@@ -29,28 +30,30 @@ const Orgs = () => {
 
   const onSubmit = formData => {
     try {
-        // const url = server + "";
-        // const jsonData = fetch(url,formData);
-        // const data = jsonData.parse();
+      // const url = server + "";
+      // const jsonData = fetch(url,formData);
+      // const data = jsonData.parse();
 
-        // if(data.status === 200){
-        //     toast.success(data.msg);
-        // }
-        toast.success(formData.name + " Org Created");
+      // if(data.status === 200){
+      //     toast.success(data.msg);
+      // }
+      toast.success(formData.name + " Org Created");
     } catch (error) {
-        toast.error(error);
+      toast.error(error);
     }
-}
+  }
 
   return (
     <>
-      <div className="top_info">Hello User</div>
-      <button onClick={() => setIsModalOpen(true)}>Create Organization</button>
-      <Modal isOpen={isModalOpen} isClose={setIsModalOpen}>
-      <CreateForm fields={orgFields} onSubmit={onSubmit} buttonText="Create Organisation" />
-      </Modal>
-      <div className="orgList">
-        <List data={orgList} />
+      <div className="mainContainer">
+        <div className="top_info">Hello User</div>
+        <button onClick={() => setIsModalOpen(true)}>Create Organization</button>
+        <Modal isOpen={isModalOpen} isClose={setIsModalOpen}>
+          <CreateForm fields={orgFields} onSubmit={onSubmit} buttonText="Create Organisation" />
+        </Modal>
+        <div className="orgList">
+          <List data={orgList} />
+        </div>
       </div>
     </>
   )

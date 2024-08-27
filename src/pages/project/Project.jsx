@@ -37,27 +37,29 @@ const Project = () => {
 
     setAvailableUsers(prevUsers => prevUsers.filter(user => !selectedUserIds.includes(user.id)));
     console.log(selectedUsers);
-    
+
     toast.success('Members added successfully');
   };
 
   return (
     <>
-      <div>
-      <h2>Project Details</h2>
-      {proData ? (
+      <div className="mainContainer">
         <div>
-          <p><strong>Name:</strong> {proData}</p>
+          <h2>Project Details</h2>
+          {proData ? (
+            <div>
+              <p><strong>Name:</strong> {proData}</p>
+            </div>
+          ) : (
+            <div>No organization data found</div>
+          )}
         </div>
-      ) : (
-        <div>No organization data found</div>
-      )}
-    </div>
 
-    <button onClick={() => setIsModalOpen(true)}>Add Members</button>
-      <Modal isOpen={isModalOpen} isClose={setIsModalOpen}>
-      <MemberForm onSubmit={handleAddMembers} users={availableUsers} />
-      </Modal>
+        <button onClick={() => setIsModalOpen(true)}>Add Members</button>
+        <Modal isOpen={isModalOpen} isClose={setIsModalOpen}>
+          <MemberForm onSubmit={handleAddMembers} users={availableUsers} />
+        </Modal>
+      </div>
     </>
   )
 }

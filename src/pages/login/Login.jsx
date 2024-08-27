@@ -1,15 +1,16 @@
 import './login.css';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Login = () => {
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-
-  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,22 +20,10 @@ const Login = () => {
     });
   };
 
-  const validate = () => {
-    const errors = {};
-    if (!formData.email) errors.email = 'Email is required';
-    if (!formData.password) errors.password = 'Password is required';
-    return errors;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-    } else {
-      console.log('Form data submitted:', formData);
-      // Submit form data to the server
-    }
+    toast.success("Registered");
+    navigate('/');
   };
 
   return (
@@ -51,7 +40,6 @@ const Login = () => {
             value={formData.email}
             onChange={handleChange}
           />
-          {errors.email && <p className="error">{errors.email}</p>}
         </div>
         <div className="form-group">
           <label htmlFor="password">Password:</label>
@@ -62,7 +50,6 @@ const Login = () => {
             value={formData.password}
             onChange={handleChange}
           />
-          {errors.password && <p className="error">{errors.password}</p>}
         </div>
         <button type="submit">Login</button><br/><br/>
         <span>Don't have an account? <Link to='/register'>Click here!</Link></span>

@@ -1,16 +1,16 @@
 import "./register.css";
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 const Register = () => {
 
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: ''
   });
-
-  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,24 +19,11 @@ const Register = () => {
       [name]: value
     });
   };
-
-  const validate = () => {
-    const errors = {};
-    if (!formData.username) errors.username = 'Username is required';
-    if (!formData.email) errors.email = 'Email is required';
-    if (!formData.password) errors.password = 'Password is required';
-    return errors;
-  };
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-    } else {
-      console.log('Form data submitted:', formData);
-      // Submit form data to the server
-    }
+    toast.success("Registered");
+    navigate('/login');
   };
 
   return (
@@ -53,8 +40,8 @@ const Register = () => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
+                required
               />
-              {errors.username && <p className="error">{errors.username}</p>}
             </div>
             <div className="form-group">
               <label htmlFor="email">Email:</label>
@@ -64,8 +51,8 @@ const Register = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                required
               />
-              {errors.email && <p className="error">{errors.email}</p>}
             </div>
             <div className="form-group">
               <label htmlFor="password">Password:</label>
@@ -75,8 +62,8 @@ const Register = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
+                required
               />
-              {errors.password && <p className="error">{errors.password}</p>}
             </div>
             <button type="submit">Register</button>
             <br /><br />

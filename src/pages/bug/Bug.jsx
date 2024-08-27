@@ -37,28 +37,30 @@ const Bug = () => {
 
     setAvailableUsers(prevUsers => prevUsers.filter(user => !selectedUserIds.includes(user.id)));
     console.log(selectedUsers);
-    
+
     toast.success('Members added successfully');
   };
 
 
   return (
     <>
-      <div>
-      <h2>Project Details</h2>
-      {bugData ? (
+      <div className="mainContainer">
         <div>
-          <p><strong>Name:</strong> {bugData}</p>
+          <h2>Project Details</h2>
+          {bugData ? (
+            <div>
+              <p><strong>Name:</strong> {bugData}</p>
+            </div>
+          ) : (
+            <div>No organization data found</div>
+          )}
         </div>
-      ) : (
-        <div>No organization data found</div>
-      )}
-    </div>
 
-    <button onClick={() => setIsModalOpen(true)}>Add Members</button>
-      <Modal isOpen={isModalOpen} isClose={setIsModalOpen}>
-      <MemberForm onSubmit={handleAddMembers} users={availableUsers} />
-      </Modal>
+        <button onClick={() => setIsModalOpen(true)}>Add Members</button>
+        <Modal isOpen={isModalOpen} isClose={setIsModalOpen}>
+          <MemberForm onSubmit={handleAddMembers} users={availableUsers} />
+        </Modal>
+      </div>
     </>
   )
 }
