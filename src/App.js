@@ -7,10 +7,9 @@ import Login from './pages/login/Login';
 // import Home from "./pages/home/Home";
 import Orgs from './pages/orgs/Orgs';
 import Org from "./pages/org/Org";
-import Projects from './pages/projects/Projects';
 import Project from './pages/project/Project';
-import Bugs from './pages/bugs/Bugs';
 import Bug from './pages/bug/Bug';
+import NotFound from './pages/notFound/NotFound';
 
 function App() {
   return (
@@ -20,21 +19,13 @@ function App() {
         <Route path="login" element={<Login />} />
 
         <Route path="/" element={<Layout />}>
-          <Route path="">
-            <Route index element={<Orgs />} />
-            <Route path=":orgId" element={<Org />} />
-          </Route>
-
-          <Route path="project">
-            <Route index element={<Projects />} />
-            <Route path=":proId" element={<Project />} />
-          </Route>
-
-          <Route path="bug">
-            <Route index element={<Bugs />} />
-            <Route path=":bugId" element={<Bug />} />
-          </Route>
+          <Route index element={<Orgs />} />
+          <Route path=":orgName" element={<Org />} />
+          <Route path=":orgName/:proName" element={<Project />} />
+          <Route path=":orgName/:proName/:bugName" element={<Bug />} />
         </Route>
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );

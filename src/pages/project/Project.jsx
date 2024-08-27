@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Modal from '../../components/modal/Modal';
 import MemberForm from '../../components/forms/memberForm/MemberForm';
+import CreateForm from '../../components/forms/createForm/CreateForm';
+import bugFields from '../../assets/formFields/bug';
+import List from '../../components/listItems/List';
 
 const initialUsers = [
   { id: 1, name: 'User One' },
@@ -11,10 +14,33 @@ const initialUsers = [
   { id: 4, name: 'User Four' },
 ];
 
+const bugList = [
+  {
+    name: "abc",
+    owner: "def",
+    _id: "login"
+  },
+  {
+    name: "abc",
+    owner: "def"
+  },
+  {
+    name: "213",
+    owner: "def",
+    _id: "register"
+  }
+]
+
 const Project = () => {
-  const { projectId } = useParams();
+  const navigate = useNavigate();
+  const { orgName, proName } = useParams();
+  const location = useLocation();
+  const projectId = location.state?.id;
+
+  const [createModal, setCreateModal] = useState(false);
+  const [addModal, setAddModal] = useState(false);
+
   const [proData, setProData] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [availableUsers, setAvailableUsers] = useState(initialUsers);
 
   useEffect(() => {
@@ -41,6 +67,27 @@ const Project = () => {
     toast.success('Members added successfully');
   };
 
+  const onSubmit = formData => {
+    try {
+      // const url = server + "";
+      // const jsonData = fetch(url,formData);
+      // const data = jsonData.parse();
+
+      // if(data.status === 200){
+      //     toast.success(data.msg);
+      // }
+      toast.success(formData.name + " bug Created");
+    } catch (error) {
+      toast.error(error);
+    }
+  }
+
+  const handleBugClick = (bug) => {
+    const formattedName = bug.name.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/${orgName}/${proName}/${formattedName}`, { state: { id: bug._id } });
+  };
+
+
   return (
     <>
       <div className="mainContainer">
@@ -55,10 +102,22 @@ const Project = () => {
           )}
         </div>
 
-        <button onClick={() => setIsModalOpen(true)}>Add Members</button>
-        <Modal isOpen={isModalOpen} isClose={setIsModalOpen}>
-          <MemberForm onSubmit={handleAddMembers} users={availableUsers} />
-        </Modal>
+        <div className="addmember">
+          <button onClick={() => setAddModal(true)}>Add Members</button>
+          <Modal isOpen={addModal} isClose={setAddModal}>
+            <MemberForm onSubmit={handleAddMembers} users={availableUsers} />
+          </Modal>
+        </div>
+
+        <div className="lower">
+          <button onClick={() => setCreateModal(true)}>Create Bug</button>
+          <Modal isOpen={createModal} isClose={setCreateModal}>
+            <CreateForm fields={bugFields} onSubmit={onSubmit} buttonText="Create Bug" />
+          </Modal>
+          <div className="bugList">
+            <List data={bugList} onRowClick={handleBugClick} />
+          </div>
+        </div>
       </div>
     </>
   )

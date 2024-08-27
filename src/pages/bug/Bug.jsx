@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Modal from '../../components/modal/Modal';
 import MemberForm from '../../components/forms/memberForm/MemberForm';
@@ -12,9 +12,12 @@ const initialUsers = [
 ];
 
 const Bug = () => {
-  const { bugId } = useParams();
+  const location = useLocation();
+  const bugId = location.state?.id;
+
+  const [addModal, setAddModal] = useState(false);
+
   const [bugData, setBugData] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [availableUsers, setAvailableUsers] = useState(initialUsers);
 
   useEffect(() => {
@@ -46,7 +49,7 @@ const Bug = () => {
     <>
       <div className="mainContainer">
         <div>
-          <h2>Project Details</h2>
+          <h2>bug Details</h2>
           {bugData ? (
             <div>
               <p><strong>Name:</strong> {bugData}</p>
@@ -56,8 +59,8 @@ const Bug = () => {
           )}
         </div>
 
-        <button onClick={() => setIsModalOpen(true)}>Add Members</button>
-        <Modal isOpen={isModalOpen} isClose={setIsModalOpen}>
+        <button onClick={() => setAddModal(true)}>Add Members</button>
+        <Modal isOpen={addModal} isClose={setAddModal}>
           <MemberForm onSubmit={handleAddMembers} users={availableUsers} />
         </Modal>
       </div>

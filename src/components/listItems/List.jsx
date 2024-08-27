@@ -1,20 +1,12 @@
 import './list.css';
-import { useNavigate } from 'react-router-dom';
 
-const List = ({ data }) => {
-  const navigate = useNavigate();
+const List = ({ data, onRowClick }) => {
 
   if (!data || data.length === 0) {
     return <p>No data available.</p>;
   }
 
   const headers = Object.keys(data[0]).filter((key) => key !== '_id');
-
-  const handleRowClick = (link) => {
-    if (link) {
-      navigate(link);
-    }
-  };
 
   return (
     <div className="table-container">
@@ -30,7 +22,7 @@ const List = ({ data }) => {
           {data.map((item, index) => (
             <tr
               key={index}
-              onClick={() => handleRowClick(item._id)}
+              onClick={() => onRowClick(item)}
               className={item._id ? 'clickable-row' : ''}
             >
               {headers.map((header) => (

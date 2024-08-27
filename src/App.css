@@ -17,6 +17,10 @@ body {
   justify-content: center;
 }
 
+.addmember{
+  margin: 10px;
+}
+
 button {
   padding: 10px 20px;
   font-size: 16px;
