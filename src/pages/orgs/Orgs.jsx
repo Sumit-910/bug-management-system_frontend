@@ -9,24 +9,26 @@ import { useNavigate } from 'react-router-dom';
 
 const orgList = [
   {
-    name: "abc",
-    owner: "def",
+    name: "org1",
+    owner: "me",
     _id: "1"
   },
   {
-    name: "abc",
-    owner: "def"
+    name: "org2",
+    owner: "hehe",
+    _id: "2"
   },
   {
-    name: "213",
-    owner: "def",
-    _id: "2"
+    name: "org3",
+    owner: "hihi",
+    _id: "3"
   }
-]
+];
 
 const Orgs = () => {
   const navigate = useNavigate();
   const [createModal, setCreateModal] = useState(false);
+  const [filter, setFilter] = useState('all');
 
   const onSubmit = formData => {
     try {
@@ -38,8 +40,18 @@ const Orgs = () => {
 
   const handleOrgClick = (org) => {
     const formattedName = org.name.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/${formattedName}`, { state: { id: org._id } });
+    navigate(`/${formattedName}`, { state: { id: org._id, orgN: formattedName } });
   };
+
+  const filteredOrgList = orgList.filter(org => {
+    if (filter === 'created') {
+      return org.owner === "me";
+    } else if (filter === 'joined') {
+      // return org.owner !== user._id;
+      return org.owner !== "me";
+    }
+    return true;
+  });
 
   return (
     <>
@@ -51,8 +63,20 @@ const Orgs = () => {
             <CreateForm fields={orgFields} onSubmit={onSubmit} buttonText="Create Organisation" />
           </Modal>
         </div>
+        <div className="filterDropdown">
+            <label htmlFor="filter">Filter:</label>
+            <select
+              id="filter"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}  // Inline function
+            >
+              <option value="all">All</option>
+              <option value="created">My Orgs</option>
+              <option value="joined">Joined</option>
+            </select>
+          </div>
         <div className="orgList">
-          <List data={orgList} onRowClick={handleOrgClick} />
+          <List data={filteredOrgList} onRowClick={handleOrgClick} />
         </div>
       </div>
     </>

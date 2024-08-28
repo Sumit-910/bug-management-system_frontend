@@ -1,5 +1,6 @@
-import './createForm.css';
 import { useState } from 'react';
+
+import './createForm.css';
 
 const CreateForm = ({ fields, onSubmit, buttonText }) => {
   const [formData, setFormData] = useState(() => {
@@ -35,6 +36,19 @@ const CreateForm = ({ fields, onSubmit, buttonText }) => {
               placeholder={field.placeholder}
               required={field.required}
             />
+          ) : field.type === 'select' ? (
+            <select
+              name={field.name}
+              value={formData[field.name]}
+              onChange={handleChange}
+              required={field.required}
+            >
+              {field.options.map((option, index) => (
+                <option key={index} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           ) : (
             <input
               type={field.type}
