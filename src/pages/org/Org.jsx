@@ -7,6 +7,9 @@ import Modal from '../../components/modal/Modal';
 import List from '../../components/listItems/List';
 import proFields from '../../assets/formFields/project';
 import CreateForm from '../../components/forms/createForm/CreateForm';
+import { useDispatch } from 'react-redux';
+import { addMembers } from '../../redux/slices/orgSlice';
+import { useSelector } from 'react-redux';
 
 const initialUsers = [
   { id: 1, name: 'User One' },
@@ -58,12 +61,17 @@ const Org = () => {
     fetchOrgData();
   }, [orgId]);
 
+  const dispatch = useDispatch();
+
+  const data=useSelector((state)=>{
+    return state.orgs;
+  })
+
   const handleAddMembers = (selectedUserIds) => {
     const selectedUsers = availableUsers.filter(user => selectedUserIds.includes(user.id));
-
     setAvailableUsers(prevUsers => prevUsers.filter(user => !selectedUserIds.includes(user.id)));
-    console.log(selectedUsers);
-
+    // console.log();
+    dispatch(addMembers({orgName:orgName,member:selectedUsers}));
     toast.success('Members added successfully');
   };
 
@@ -73,9 +81,9 @@ const Org = () => {
     navigate(`/${orgName}/${formattedName}`, { state: { id: project._id } });
   };
 
-  const handleProject = formData => {
+  const handleProject = (formData) => {
     try {
-      toast.success(formData.name + " Project Created");
+      toast.success(formData.name + "Project Created" );
     } catch (error) {
       toast.error(error);
     }
@@ -95,14 +103,12 @@ const Org = () => {
             <div>No organization data found</div>
           )}
         </div>
-
         <div className="addmember">
           <button onClick={() => setAddModal(true)}>Add Members</button>
           <Modal isOpen={addModal} isClose={setAddModal}>
             <MemberForm onSubmit={handleAddMembers} users={availableUsers} />
           </Modal>
         </div>
-
         <div className="lower">
           <button onClick={() => setCreateModal(true)}>Create Project</button>
           <Modal isOpen={createModal} isClose={setCreateModal}>

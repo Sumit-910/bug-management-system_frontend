@@ -39,6 +39,7 @@ const Login = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
+            required
           />
         </div>
         <div className="form-group">
@@ -49,6 +50,7 @@ const Login = () => {
             name="password"
             value={formData.password}
             onChange={handleChange}
+            required
           />
         </div>
         <button type="submit">Login</button><br/><br/>

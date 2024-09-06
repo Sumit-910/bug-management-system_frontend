@@ -1,7 +1,10 @@
 import './createForm.css';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addOrg } from '../../../redux/slices/orgSlice';
 
 const CreateForm = ({ fields, onSubmit, buttonText }) => {
+  const dispatch=useDispatch();
   const [formData, setFormData] = useState(() => {
     const initialData = {};
     fields.forEach(field => {
@@ -15,11 +18,18 @@ const CreateForm = ({ fields, onSubmit, buttonText }) => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    if(buttonText=='Create Organisation'){
+      console.log(1)
+      dispatch(addOrg(formData))
+    }
+    console.log(formData)
+    // onSubmit(formData);
+    
   };
 
   return (
