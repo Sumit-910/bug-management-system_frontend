@@ -1,0 +1,34 @@
+/* orgs.css */
+.tabContainer {
+    margin-top: 20px;
+  }
+  
+  .tabs {
+    display: flex;
+    border-bottom: 2px solid #ccc;
+  }
+  
+  .tabs button {
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .tabs button.active {
+    border-bottom: 2px solid #007bff;
+    color: #007bff;
+  }
+  
+  .tabs button:hover:not(.active) {
+    color: #007bff;
+  }
+  
+  .tabContent {
+    margin-top: 20px;
+  }
+  

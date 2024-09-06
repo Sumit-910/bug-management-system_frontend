@@ -16,18 +16,19 @@ const initialUsers = [
 
 const bugList = [
   {
-    name: "abc",
+    name: "bug1",
     owner: "def",
-    _id: "login"
+    _id: "1"
   },
   {
-    name: "abc",
-    owner: "def"
+    name: "bug2",
+    owner: "def",
+    _id: "2"
   },
   {
-    name: "213",
+    name: "bug3",
     owner: "def",
-    _id: "register"
+    _id: "3"
   }
 ]
 
@@ -37,19 +38,20 @@ const Project = () => {
   const location = useLocation();
   const projectId = location.state?.id;
 
+  if (orgName !== location.state?.orgN || proName !== location.state?.proN) navigate('/notFound');
+
   const [createModal, setCreateModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
 
   const [proData, setProData] = useState(null);
   const [availableUsers, setAvailableUsers] = useState(initialUsers);
+  const [activeTab, setActiveTab] = useState('bugs');
 
   useEffect(() => {
     const fetchOrgData = async () => {
       try {
-        // const response = await axios.get(`/api/organizations/${projectId}`);
-        // setProData(response.data);
-        setProData(1);
-        toast.success("hehe");
+        setProData({ owner: 'me' });
+        toast.success("project data loaded");
       } catch (err) {
         toast.error('Error fetching organization data');
       }
@@ -69,13 +71,6 @@ const Project = () => {
 
   const onSubmit = formData => {
     try {
-      // const url = server + "";
-      // const jsonData = fetch(url,formData);
-      // const data = jsonData.parse();
-
-      // if(data.status === 200){
-      //     toast.success(data.msg);
-      // }
       toast.success(formData.name + " bug Created");
     } catch (error) {
       toast.error(error);
@@ -84,7 +79,12 @@ const Project = () => {
 
   const handleBugClick = (bug) => {
     const formattedName = bug.name.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/${orgName}/${proName}/${formattedName}`, { state: { id: bug._id } });
+    navigate(`/${orgName}/${proName}/${formattedName}`, { state: { id: bug._id, orgN: orgName, proN: proName, bugN: formattedName } });
+  };
+
+  const handleRemoveMember = (userId) => {
+    setAvailableUsers(prevUsers => [...prevUsers, initialUsers.find(user => user.id === userId)]);
+    toast.success('Member removed successfully');
   };
 
 
@@ -95,28 +95,59 @@ const Project = () => {
           <h2>Project Details</h2>
           {proData ? (
             <div>
-              <p><strong>Name:</strong> {proData}</p>
+              <p><strong>Name:</strong> {proName}</p>
             </div>
           ) : (
-            <div>No organization data found</div>
+            <div>No project data found</div>
           )}
         </div>
 
-        <div className="addmember">
-          <button onClick={() => setAddModal(true)}>Add Members</button>
-          <Modal isOpen={addModal} isClose={setAddModal}>
-            <MemberForm onSubmit={handleAddMembers} users={availableUsers} />
-          </Modal>
+        <div className="tabContainer">
+          {proData?.owner === 'me' && (
+            <nav className="tabs">
+              <button
+                className={activeTab === 'bugs' ? 'active' : ''}
+                onClick={() => setActiveTab('bugs')}
+              >
+                Projects
+              </button>
+              <button
+                className={activeTab === 'members' ? 'active' : ''}
+                onClick={() => setActiveTab('members')}
+              >
+                Members
+              </button>
+            </nav>
+          )}
         </div>
 
-        <div className="lower">
-          <button onClick={() => setCreateModal(true)}>Create Bug</button>
-          <Modal isOpen={createModal} isClose={setCreateModal}>
-            <CreateForm fields={bugFields} onSubmit={onSubmit} buttonText="Create Bug" />
-          </Modal>
-          <div className="bugList">
-            <List data={bugList} onRowClick={handleBugClick} />
-          </div>
+        <div className="tabContent">
+          {activeTab === 'bugs' && (
+            <div className="bugSection">
+              <button onClick={() => setCreateModal(true)}>Create Bug</button>
+              <Modal isOpen={createModal} isClose={setCreateModal}>
+                <CreateForm fields={bugFields} onSubmit={onSubmit} buttonText="Create Project" />
+              </Modal>
+              <div className="bugList">
+              <List data={bugList} onRowClick={handleBugClick} />
+            </div>
+            </div>
+          )}
+
+          {activeTab === 'members' && (
+            <div className="memberSection">
+              <button onClick={() => setAddModal(true)}>Add Members</button>
+              <Modal isOpen={addModal} isClose={setAddModal}>
+                <MemberForm onSubmit={handleAddMembers} users={availableUsers} />
+              </Modal>
+              <div className="memberList">
+                <List
+                  data={initialUsers}
+                  onRowClick={handleRemoveMember}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

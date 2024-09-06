@@ -1,7 +1,8 @@
-import './createForm.css';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addOrg } from '../../../redux/slices/orgSlice';
+
+import './createForm.css';
 
 const CreateForm = ({ fields, onSubmit, buttonText }) => {
   const dispatch=useDispatch();
@@ -45,6 +46,19 @@ const CreateForm = ({ fields, onSubmit, buttonText }) => {
               placeholder={field.placeholder}
               required={field.required}
             />
+          ) : field.type === 'select' ? (
+            <select
+              name={field.name}
+              value={formData[field.name]}
+              onChange={handleChange}
+              required={field.required}
+            >
+              {field.options.map((option, index) => (
+                <option key={index} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           ) : (
             <input
               type={field.type}
