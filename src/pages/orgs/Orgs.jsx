@@ -6,7 +6,26 @@ import List from '../../components/listItems/List';
 import orgFields from '../../assets/formFields/org';
 import CreateForm from '../../components/forms/createForm/CreateForm';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
+<<<<<<< HEAD
+// const orgList = [
+//   {
+//     name: "abc",
+//     owner: "def",
+//     _id: "1"
+//   },
+//   {
+//     name: "abc",
+//     owner: "def"
+//   },
+//   {
+//     name: "213",
+//     owner: "def",
+//     _id: "2"
+//   }
+// ]
+=======
 const orgList = [
   {
     name: "org1",
@@ -24,8 +43,13 @@ const orgList = [
     _id: "3"
   }
 ];
+>>>>>>> 8b1ded89c3c18f507ead08e3863b952afad91477
 
 const Orgs = () => {
+  const data=useSelector((state)=>{
+    return state.orgs;
+})
+  // const dispatch=useDispatch();
   const navigate = useNavigate();
   const [createModal, setCreateModal] = useState(false);
   const [filter, setFilter] = useState('all');
@@ -76,7 +100,11 @@ const Orgs = () => {
             </select>
           </div>
         <div className="orgList">
+<<<<<<< HEAD
+          <List data={data} onRowClick={handleOrgClick} />
+=======
           <List data={filteredOrgList} onRowClick={handleOrgClick} />
+>>>>>>> 8b1ded89c3c18f507ead08e3863b952afad91477
         </div>
       </div>
     </>
