@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
 
+import {server} from "../../assets/constants";
+
 const Register = () => {
 
   const navigate = useNavigate();
@@ -20,10 +22,33 @@ const Register = () => {
     });
   };
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    toast.success("Registered");
-    navigate('/login');
+
+    const url = server + "/auth/register";
+    try {
+      
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json' // Set header for JSON data
+        },
+        body: JSON.stringify(formData) // Convert formData to JSON string
+      });
+  
+      if(response.status === 200){
+        toast.success("Registered");
+        navigate('/login');
+      }
+      else {
+        const {msg} = await response.json();
+        toast.error(msg);
+      }
+      
+    } catch (error) {
+      toast.error(error);
+    }
   };
 
   return (

@@ -1,7 +1,22 @@
 import './navbar.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+// import Cookies from 'js-cookie';
+
+import { clearUser } from '../../redux/slices/userSlice';
+
 const Navbar = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        dispatch(clearUser());
+        // Cookies.remove('accessToken');
+        // Cookies.remove('refreshToken');
+        navigate("/login");
+    }
+
     return (
         <>
             <div className="navbar">
@@ -12,12 +27,7 @@ const Navbar = () => {
                     <div className="menu-item">
                         <Link to="/">Home</Link>
                     </div>
-                    <div className="menu-item">
-                        <Link to="/login">Login</Link>
-                    </div>
-                    <div className="menu-item">
-                        <Link to="/register">Register</Link>
-                    </div>
+                    <div className='logout' onClick={handleLogout}>Logout</div>
                 </div>
             </div>
             <Outlet />

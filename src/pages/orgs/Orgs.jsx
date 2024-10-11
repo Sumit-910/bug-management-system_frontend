@@ -1,64 +1,75 @@
 import './orgs.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+
 import Modal from '../../components/modal/Modal';
 import List from '../../components/listItems/List';
 import orgFields from '../../assets/formFields/org';
 import CreateForm from '../../components/forms/createForm/CreateForm';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-
-<<<<<<< HEAD
-// const orgList = [
-//   {
-//     name: "abc",
-//     owner: "def",
-//     _id: "1"
-//   },
-//   {
-//     name: "abc",
-//     owner: "def"
-//   },
-//   {
-//     name: "213",
-//     owner: "def",
-//     _id: "2"
-//   }
-// ]
-=======
-const orgList = [
-  {
-    name: "org1",
-    owner: "me",
-    _id: "1"
-  },
-  {
-    name: "org2",
-    owner: "hehe",
-    _id: "2"
-  },
-  {
-    name: "org3",
-    owner: "hihi",
-    _id: "3"
-  }
-];
->>>>>>> 8b1ded89c3c18f507ead08e3863b952afad91477
+import { server } from '../../assets/constants';
 
 const Orgs = () => {
-  const data=useSelector((state)=>{
-    return state.orgs;
-})
-  // const dispatch=useDispatch();
+  const userToken = useSelector((state) => state.user.accessToken);
+  const userId = useSelector((state) => state.user.userId);
   const navigate = useNavigate();
   const [createModal, setCreateModal] = useState(false);
   const [filter, setFilter] = useState('all');
+  const [orgList, setOrgList] = useState();
 
-  const onSubmit = formData => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${userToken}`, // Send Bearer token as userId
+    },
+  };
+
+  const url = server + '/org/getAllOrgs';
+    const fetchOrgs = async () => {
+      try {
+        const response = await axios.get(url,
+          config
+        );
+        console.log(response);
+
+        setOrgList(response.data);
+        // console.log('orgList :- ');
+        // console.log(orgList);
+
+      } catch (error) {
+        console.error('Error fetching organizations:', error);
+      }
+  };
+
+  useEffect(() => {
+    fetchOrgs();
+    console.log("userId "+ userId);
+    
+  }, [])
+
+
+  const onSubmit = async(formData) => {
+    const url = server + '/org/create'
     try {
-      toast.success(formData.name + " Org Created");
+      const response = await axios.post(url, {
+        name: formData.name,
+        description: formData.description
+      }, config);
+
+      if (response.status === 200) {
+        toast.success(`${formData.name} Org Created`);
+        fetchOrgs();
+      } else {
+        toast.error("Failed to create organization");
+      }
+
     } catch (error) {
-      toast.error(error);
+      toast.error(error.response?.data?.msg || 'Internal Server Error');
+      console.error(error);
+    }
+    finally{
+      setCreateModal(createModal => !createModal)
     }
   }
 
@@ -67,12 +78,12 @@ const Orgs = () => {
     navigate(`/${formattedName}`, { state: { id: org._id, orgN: formattedName } });
   };
 
-  const filteredOrgList = orgList.filter(org => {
+  const filteredOrgList = orgList?.filter(org => {
     if (filter === 'created') {
-      return org.owner === "me";
+      return org.ownerId === userId;
     } else if (filter === 'joined') {
       // return org.owner !== user._id;
-      return org.owner !== "me";
+      return org.ownerId !== userId;
     }
     return true;
   });
@@ -88,23 +99,22 @@ const Orgs = () => {
           </Modal>
         </div>
         <div className="filterDropdown">
-            <label htmlFor="filter">Filter:</label>
-            <select
-              id="filter"
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}  // Inline function
-            >
-              <option value="all">All</option>
-              <option value="created">My Orgs</option>
-              <option value="joined">Joined</option>
-            </select>
-          </div>
+          <label htmlFor="filter">Filter:</label>
+          <select
+            id="filter"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="all">All</option>
+            <option value="created">My Orgs</option>
+            <option value="joined">Joined</option>
+          </select>
+        </div>
         <div className="orgList">
-<<<<<<< HEAD
-          <List data={data} onRowClick={handleOrgClick} />
-=======
-          <List data={filteredOrgList} onRowClick={handleOrgClick} />
->>>>>>> 8b1ded89c3c18f507ead08e3863b952afad91477
+          <List
+            data={filteredOrgList}
+            onRowClick={handleOrgClick}
+          />
         </div>
       </div>
     </>

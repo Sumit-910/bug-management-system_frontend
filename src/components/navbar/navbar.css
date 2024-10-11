@@ -36,6 +36,9 @@ body {
 .navbar .menu {
     display: flex;
     gap: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .navbar .menu-item a {
@@ -45,6 +48,20 @@ body {
     padding: 10px 15px;
     border-bottom: 2px solid transparent;
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.logout {
+    cursor: pointer;
+    font-size: 1rem;
+    color: #C5C6C7;
+    text-decoration: none;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.logout:hover {
+    background-color: red;
+    color: #ffffff;
 }
 
 .navbar .menu-item a:hover {

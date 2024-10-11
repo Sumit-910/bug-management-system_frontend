@@ -1,7 +1,8 @@
 import './list.css';
+import { FaEdit, FaTrash } from 'react-icons/fa'; // Importing icons from react-icons
 
-const List = ({ data, onRowClick }) => {
-
+const List = ({ data, onRowClick, userRoles, requiredRole, onEdit, onDelete }) => {
+  const allowedAccess = (userRoles && userRoles.includes(requiredRole));
   if (!data || data.length === 0) {
     return <p>No data available.</p>;
   }
@@ -16,6 +17,7 @@ const List = ({ data, onRowClick }) => {
             {headers.map((header) => (
               <th key={header}>{header.toUpperCase()}</th>
             ))}
+            {allowedAccess && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -28,6 +30,18 @@ const List = ({ data, onRowClick }) => {
               {headers.map((header) => (
                 <td key={header}>{item[header]}</td>
               ))}
+              {allowedAccess && (
+                <td className="action-icons">
+                  <FaEdit 
+                    className="edit-icon" 
+                    onClick={(e) => { e.stopPropagation(); onEdit(item); }} 
+                  />
+                  <FaTrash 
+                    className="delete-icon" 
+                    onClick={(e) => { e.stopPropagation(); onDelete(item._id); }} 
+                  />
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

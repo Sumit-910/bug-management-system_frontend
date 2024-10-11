@@ -31,4 +31,11 @@
   .tabContent {
     margin-top: 20px;
   }
+
+.lower{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
   

@@ -2,10 +2,15 @@ import './login.css';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import {server} from '../../assets/constants';
+import { useDispatch } from 'react-redux';
+
+import { setUser } from '../../redux/slices/userSlice';
 
 const Login = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -20,10 +25,34 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    toast.success("Registered");
-    navigate('/');
+    const url = server + "/auth/login";
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json' // Set header for JSON data
+        },
+        body: JSON.stringify(formData) // Convert formData to JSON string
+      });
+      if(response.status === 200){
+        toast.success("Logged in");
+        const {accessToken, refreshToken, userId} = await response.json();
+        console.log("login accesstoken = "+accessToken);
+        
+        dispatch(setUser({ accessToken: accessToken, refreshToken: refreshToken, userId: userId }));
+        navigate('/');
+      }
+      else{
+        const {msg} = await response.json();
+        toast.error(msg);
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+    
   };
 
   return (

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
 import Modal from '../../components/modal/Modal';
 import MemberForm from '../../components/forms/memberForm/MemberForm';
 import CreateForm from '../../components/forms/createForm/CreateForm';
@@ -14,24 +15,6 @@ const initialUsers = [
   { id: 4, name: 'User Four' },
 ];
 
-const bugList = [
-  {
-    name: "bug1",
-    owner: "def",
-    _id: "1"
-  },
-  {
-    name: "bug2",
-    owner: "def",
-    _id: "2"
-  },
-  {
-    name: "bug3",
-    owner: "def",
-    _id: "3"
-  }
-]
-
 const Project = () => {
   const navigate = useNavigate();
   const { orgName, proName } = useParams();
@@ -39,6 +22,8 @@ const Project = () => {
   const projectId = location.state?.id;
 
   if (orgName !== location.state?.orgN || proName !== location.state?.proN) navigate('/notFound');
+
+  const bugList = [];
 
   const [createModal, setCreateModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
@@ -86,6 +71,13 @@ const Project = () => {
     setAvailableUsers(prevUsers => [...prevUsers, initialUsers.find(user => user.id === userId)]);
     toast.success('Member removed successfully');
   };
+
+  const onEdit = () => {
+    toast.success("row edited");
+  }
+  const onDelete = () => {
+    toast.success("row deleted");
+  }
 
 
   return (
@@ -144,6 +136,10 @@ const Project = () => {
                 <List
                   data={initialUsers}
                   onRowClick={handleRemoveMember}
+                  userRoles={["admin","projectLead"]}
+                  requiredRole={"admin"}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
                 />
               </div>
             </div>
