@@ -31,7 +31,7 @@ const Orgs = () => {
         const response = await axios.get(url,
           config
         );
-        console.log(response);
+        // console.log(response);
 
         setOrgList(response.data);
         // console.log('orgList :- ');
@@ -44,7 +44,7 @@ const Orgs = () => {
 
   useEffect(() => {
     fetchOrgs();
-    console.log("userId "+ userId);
+    // console.log("userId "+ userId);
     
   }, [])
 
@@ -74,8 +74,10 @@ const Orgs = () => {
   }
 
   const handleOrgClick = (org) => {
+    // console.log(org);
+    
     const formattedName = org.name.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/${formattedName}`, { state: { id: org._id, orgN: formattedName } });
+    navigate(`/${formattedName}`, { state: { id: org.id, orgN: formattedName } });
   };
 
   const filteredOrgList = orgList?.filter(org => {

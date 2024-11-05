@@ -1,5 +1,6 @@
 import './org.css';
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
@@ -9,6 +10,7 @@ import Modal from '../../components/modal/Modal';
 import List from '../../components/listItems/List';
 import proFields from '../../assets/formFields/project';
 import CreateForm from '../../components/forms/createForm/CreateForm';
+import { server } from '../../assets/constants';
 
 const initialUsers = [
   { id: 1, name: 'User One' },
@@ -42,6 +44,8 @@ const Org = () => {
   const { orgName } = useParams();
   const location = useLocation();
   const orgId = location.state?.id;
+  // console.log("orgId " + orgId);
+  
 
   if (location.state?.orgN !== orgName) navigate("/notFound");
 
@@ -61,16 +65,20 @@ const Org = () => {
 
   useEffect(() => {
     const fetchOrgData = async () => {
+      const url = server + '/org/singleOrg';
       try {
-        setOrgData({ owner: 'me' }); // Assuming 'me' is the current user's ID
+        const response = await axios.post(url, { orgId: orgId }, config);
+        console.log(response.data);
+        
+        setOrgData(response.data);
         toast.success("Organization data loaded");
       } catch (err) {
         toast.error('Error fetching organization data');
       }
     };
-
+  
     fetchOrgData();
-  }, [orgId]);
+  }, []);
 
 
   const handleAddMembers = (selectedUserIds) => {

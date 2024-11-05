@@ -25,7 +25,7 @@ const List = ({ data, onRowClick, userRoles, requiredRole, onEdit, onDelete }) =
             <tr
               key={index}
               onClick={() => onRowClick(item)}
-              className={item._id ? 'clickable-row' : ''}
+              className={item.id ? 'clickable-row' : ''}
             >
               {headers.map((header) => (
                 <td key={header}>{item[header]}</td>
